@@ -1,0 +1,1 @@
+export const toTrimmedLines = (str: string) => str.split('\n').map(line => line.trim());

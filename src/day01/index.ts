@@ -1,52 +1,48 @@
 import run from "aocrunner";
+import { toSum } from "../utils/toSum.js";
+import { toTrimmedLines } from "../utils/toTrimmedLines.js";
 
-const parseInput = (rawInput: string) => rawInput.split("\n");
+const parseInput = (rawInput: string) => toTrimmedLines(rawInput);
 
 const part1 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-  return input
-    .map((line) => line.trim().replace(/[^0-9]/g, ""))
-    .map((nums) => {
-      const first = nums.at(0);
-      const second = nums.at(-1);
-      const res = parseInt(`${first}${second}`, 10);
-      return res;
-    })
-    .reduce((sum, curr) => curr + sum, 0)
+  return parseInput(rawInput)
+    .map(toFirstLastDigitNumber)
+    .reduce(toSum, 0)
     .toString();
 };
 
 const part2 = (rawInput: string) => {
-  const DIGITS = {
-    one: "one1one",
-    two: "two2two",
-    three: "three3three",
-    four: "four4four",
-    five: "five5five",
-    six: "six6six",
-    seven: "seven7seven",
-    eight: "eight8eight",
-    nine: "nine9nine",
-  } as const;
-  const input = parseInput(rawInput);
-  return input
-    .map((line) => line.trim())
-    .map((line) => {
-      let str = line;
-      Object.keys(DIGITS).forEach(
-        (digit) =>
-          (str = str.replaceAll(digit, DIGITS[digit as keyof typeof DIGITS])),
-      );
-      return str.replace(/[^0-9]/g, "");
-    })
-    .map((nums) => {
-      const first = nums.at(0);
-      const second = nums.at(-1);
-      const res = parseInt(`${first}${second}`, 10);
-      return res;
-    })
-    .reduce((sum, curr) => curr + sum, 0)
+  return parseInput(rawInput)
+    .map(toStringWithParsedDigits)
+    .map(toFirstLastDigitNumber)
+    .reduce(toSum, 0)
     .toString();
+};
+
+const DIGITS = {
+  one: "one1one",
+  two: "two2two",
+  three: "three3three",
+  four: "four4four",
+  five: "five5five",
+  six: "six6six",
+  seven: "seven7seven",
+  eight: "eight8eight",
+  nine: "nine9nine",
+} as const;
+
+const toStringWithParsedDigits = (str: string): string => {
+  const digits = Object.keys(DIGITS);
+  return digits.reduce(
+    (accumulator, digit) =>
+      accumulator.replaceAll(digit, DIGITS[digit as keyof typeof DIGITS]),
+    str,
+  );
+};
+
+const toFirstLastDigitNumber = (line: string): number => {
+  const digitStr = line.replace(/[^0-9]/g, "");
+  return parseInt(`${digitStr.at(0)}${digitStr.at(-1)}`, 10);
 };
 
 run({
