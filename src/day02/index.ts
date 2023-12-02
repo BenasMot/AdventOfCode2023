@@ -1,89 +1,76 @@
 import run from "aocrunner";
 import { toTrimmedLines } from "../utils/toTrimmedLines.js";
 import { toSum } from "../utils/toSum.js";
+import { toProduct } from "../utils/toProduct.js";
 
 const parseInput = (rawInput: string) => toTrimmedLines(rawInput);
 
 const part1 = (rawInput: string) => {
-  return (
-    parseInput(rawInput)
-      //  3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-      .map((row) => {
-        const [game, ...sets] = row.split(/: |; /g);
+  return parseInput(rawInput)
+    .map((row) => {
+      const [game, ...sets] = row.split(/: |; /g);
 
-        const id = parseInt(game.split(" ").at(1)!, 10);
+      const id = parseInt(game.split(" ").at(1)!, 10);
 
-        const setMaximums = sets
-          .map((set) => set.split(", ").map((pair) => pair.split(" ")))
-          .map(
-            (valuePairs) =>
-              Object.fromEntries(
-                valuePairs
-                  .map((pair) => pair.reverse())
-                  .map(([key, value]) => [key, parseInt(value, 10)]),
-              ) as Record<string, number>,
-          )
-          .reduce((accumulator, mapping) => {
-            return {
-              red: Math.max(accumulator["red"] ?? 0, mapping["red"] ?? 0),
-              green: Math.max(accumulator["green"] ?? 0, mapping["green"] ?? 0),
-              blue: Math.max(accumulator["blue"] ?? 0, mapping["blue"] ?? 0),
-            };
-          });
+      const setMaximums = sets
+        .map((set) => set.split(", ").map((pair) => pair.split(" ")))
+        .map(
+          (valuePairs) =>
+            Object.fromEntries(
+              valuePairs
+                .map((pair) => pair.reverse())
+                .map(([key, value]) => [key, parseInt(value, 10)]),
+            ) as Record<string, number>,
+        )
+        .reduce((accumulator, mapping) => {
+          return {
+            red: Math.max(accumulator["red"] ?? 0, mapping["red"] ?? 0),
+            green: Math.max(accumulator["green"] ?? 0, mapping["green"] ?? 0),
+            blue: Math.max(accumulator["blue"] ?? 0, mapping["blue"] ?? 0),
+          };
+        });
 
-        return { id, setMaximums };
-      })
-      .filter(
-        (rowInfo) =>
-          (rowInfo.setMaximums["red"] ?? 0) <= 12 &&
-          (rowInfo.setMaximums["green"] ?? 0) <= 13 &&
-          (rowInfo.setMaximums["blue"] ?? 0) <= 14,
-      )
-      .map((rowInfo) => rowInfo.id)
-      .reduce(toSum, 0)
-  );
+      return { id, setMaximums };
+    })
+    .filter(
+      (rowInfo) =>
+        (rowInfo.setMaximums["red"] ?? 0) <= 12 &&
+        (rowInfo.setMaximums["green"] ?? 0) <= 13 &&
+        (rowInfo.setMaximums["blue"] ?? 0) <= 14,
+    )
+    .map((rowInfo) => rowInfo.id)
+    .reduce(toSum, 0);
 };
 
 const part2 = (rawInput: string) => {
-  return (
-    parseInput(rawInput)
-      //  3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-      .map((row) => {
-        const [game, ...sets] = row.split(/: |; /g);
+  return parseInput(rawInput)
+    .map((row) => {
+      const [game, ...sets] = row.split(/: |; /g);
 
-        const id = parseInt(game.split(" ").at(1)!, 10);
+      const id = parseInt(game.split(" ").at(1)!, 10);
 
-        const setMaximums = sets
-          .map((set) => set.split(", ").map((pair) => pair.split(" ")))
-          .map(
-            (valuePairs) =>
-              Object.fromEntries(
-                valuePairs
-                  .map((pair) => pair.reverse())
-                  .map(([key, value]) => [key, parseInt(value, 10)]),
-              ) as Record<string, number>,
-          )
-          .reduce((accumulator, mapping) => {
-            return {
-              red: Math.max(accumulator["red"] ?? 0, mapping["red"] ?? 0),
-              green: Math.max(accumulator["green"] ?? 0, mapping["green"] ?? 0),
-              blue: Math.max(accumulator["blue"] ?? 0, mapping["blue"] ?? 0),
-            };
-          });
+      const setMaximums = sets
+        .map((set) => set.split(", ").map((pair) => pair.split(" ")))
+        .map(
+          (valuePairs) =>
+            Object.fromEntries(
+              valuePairs
+                .map((pair) => pair.reverse())
+                .map(([key, value]) => [key, parseInt(value, 10)]),
+            ) as Record<string, number>,
+        )
+        .reduce((accumulator, mapping) => {
+          return {
+            red: Math.max(accumulator["red"] ?? 0, mapping["red"] ?? 0),
+            green: Math.max(accumulator["green"] ?? 0, mapping["green"] ?? 0),
+            blue: Math.max(accumulator["blue"] ?? 0, mapping["blue"] ?? 0),
+          };
+        });
 
-        return { id, setMaximums };
-      })
-      // .filter(
-      //   (rowInfo) =>
-      //     (rowInfo.setMaximums["red"] ?? 0) <= 12 &&
-      //     (rowInfo.setMaximums["green"] ?? 0) <= 13 &&
-      //     (rowInfo.setMaximums["blue"] ?? 0) <= 14,
-      // )
-      .map((rowInfo) =>
-        Object.values(rowInfo.setMaximums).reduce((a, b) => a * b, 1),
-      )
-      .reduce(toSum, 0)
-  );
+      return { id, setMaximums };
+    })
+    .map((rowInfo) => Object.values(rowInfo.setMaximums).reduce(toProduct, 1))
+    .reduce(toSum, 0);
 };
 
 run({
