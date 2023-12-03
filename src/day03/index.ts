@@ -2,6 +2,7 @@ import run from "aocrunner";
 import { toTrimmedLines } from "../utils/toTrimmedLines.js";
 import { toSum } from "../utils/toSum.js";
 import { toProduct } from "../utils/toProduct.js";
+import { range } from "../utils/range.js";
 
 const parseInput = (rawInput: string) => {
   const lines = toTrimmedLines(rawInput);
@@ -127,14 +128,6 @@ const part2 = (rawInput: string) => {
 
 const isDigit = (str: string) => str.match(/[0-9]/) !== null;
 const isSymbol = (str: string) => str.match(/[^0-9\.]/) !== null;
-
-const range = (from: number, to: number): number[] =>
-  new Array(to - from).fill(0).map((_, index) => from + index);
-
-const toConsole = <T>(a: T): T => {
-  console.log("###", a);
-  return a;
-};
 
 run({
   part1: {
